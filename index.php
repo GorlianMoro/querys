@@ -66,9 +66,12 @@ $fulldesc = $pdo->query("select * from tasks");
              <td><?php echo $row['is_done'] . "<br />"; ?></td>
              <td><?php echo $row['date_added'] . "<br />"; ?></td>
              <td>
-               <form class="" action="<?echo $row['id']?>" method="get" name="edit">
+               <form class="" action="<?echo $row['id']?>" method="post" name="edit">
                  <input type="text" name="descr" value=""> <br>
                  <a href="index.php?id=<?echo $row['id']?>&action=edit">Изменить</a>
+               </form>
+               <form class="" action="index.html" method="post" name="">
+
                </form>
                <a href="index.php">Выполнить</a>
                <form class="" action="index.php" method="post" name="drop">
@@ -82,12 +85,12 @@ $fulldesc = $pdo->query("select * from tasks");
          if (isset($_GET['id'])) {
            $id = htmlentities($_GET['id']);
          }
-         if (empty($_POST['drop'])) {
+         if (empty($_POST['edit'])) {
            $drop = $pdo->query("delete from tasks where id = $id");
          }
 
-         if (isset($_GET['edit'])) {
-           $descr = htmlentities($_GET['edit']);
+         if (isset($_POST['edit'])) {
+           $descr = htmlentities($_POST['edit']);
          }
 
          if (!empty($descr)) {
