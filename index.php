@@ -8,9 +8,6 @@ if (!empty($desc)) {
     $sql = $pdo->exec("insert into tasks (description, date_added) values ('$desc', NOW())");
 }
 
-if (isset($_GET['description'])) {
-    $desc = htmlentities($_GET['description']);
-}
 
 $fulldesc = $pdo->query("select * from tasks");
  ?>
@@ -68,22 +65,38 @@ $fulldesc = $pdo->query("select * from tasks");
              <td><?php echo $row['description'] . "<br />"; ?></td>
              <td><?php echo $row['is_done'] . "<br />"; ?></td>
              <td><?php echo $row['date_added'] . "<br />"; ?></td>
-             <td> <a href="index.php?id=<?echo $row['id']?>&action=edit">Изменить</a>
-                  <a href="index.php">Выполнить</a>
-                  <a href="index.php?id=<?echo $row['id'];
-                  $drop = $pdo->exec("delete from tasks where id = $id"); ?>&action=delete">Удалить</a>
+             <td>
+               <form class="" action="<?echo $row['id']?>" method="get" name="edit">
+                 <input type="text" name="descr" value=""> <br>
+                 <a href="index.php?id=<?echo $row['id']?>&action=edit">Изменить</a>
+               </form>
+               <a href="index.php">Выполнить</a>
+               <form class="" action="index.php" method="post" name="drop">
+                 <a href="index.php?id=<?echo $row['id'];?>&action=delete">Удалить</a>
+               </form>
             </td>
          </tr>
          <?php
- }
- if (isset($_GET['id'])) {
-   $id = htmlentities($_GET['id']);
+         $id = $_GET['id'];
+
+         if (isset($_GET['id'])) {
+           $id = htmlentities($_GET['id']);
+         }
+         if (empty($_POST['drop'])) {
+           $drop = $pdo->query("delete from tasks where id = $id");
+         }
+
+         if (isset($_GET['edit'])) {
+           $descr = htmlentities($_GET['edit']);
+         }
+
+         if (!empty($descr)) {
+           $edit = $pdo->quary("update tasks set description = $descr where id = $id");
+         }
+
  }
 var_dump($_GET);
- if (!empty($_GET)) {
-   $id = $_GET['id'];
-   $update = $pdo->exec("update tasks set description = $desc where id = $id");
- }
+var_dump($_POST);
  ?>
        </tbody>
      </table>
