@@ -56,7 +56,7 @@ $fulldesc = $pdo->query("select * from tasks");
      </div>
      <div style="clear: both">
      </div>
-   </br>
+   <br>
      <table>
        <tbody>
          <tr>
