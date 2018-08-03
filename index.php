@@ -1,14 +1,11 @@
 <?php
 $pdo = new PDO("mysql:host=localhost; dbname=Books", "root", "");
-
 if (isset($_POST['description'])) {
     $desc = htmlentities($_POST['description']);
 }
 if (!empty($desc)) {
     $sql = $pdo->exec("insert into tasks (description, date_added) values ('$desc', NOW())");
 }
-
-
 $fulldesc = $pdo->query("select * from tasks");
  ?>
 
@@ -63,40 +60,47 @@ $fulldesc = $pdo->query("select * from tasks");
            while ($row = $fulldesc->fetch()) {
      ?>
              <td><?php echo $row['description'] . "<br />"; ?></td>
-             <td><?php echo $row['is_done'] . "<br />"; ?></td>
+             <td><?php echo $row['is_done'] . "<br />";
+             if ($row['is_done'] == 0) {
+               echo "В процессе";
+             } else {
+               echo "Выполненно";
+             }
+             ?></td>
              <td><?php echo $row['date_added'] . "<br />"; ?></td>
              <td>
                <form class="" action="<?echo $row['id']?>" method="post" name="edit">
                  <input type="text" name="descr" value=""> <br>
                  <a href="index.php?id=<?echo $row['id']?>&action=edit">Изменить</a>
                </form>
-               <form class="" action="index.html" method="post" name="">
-
+               <form class="" action="index.php" method="get" name="done">
+                 <a href="index.php?id=<?echo $row['id'];?>&action=done">Выполнить</a>
                </form>
-               <a href="index.php">Выполнить</a>
-               <form class="" action="index.php" method="post" name="drop">
+               <form class="" action="index.php<?php echo "action=delete"; ?>" method="post" name="drop">
                  <a href="index.php?id=<?echo $row['id'];?>&action=delete">Удалить</a>
                </form>
             </td>
          </tr>
          <?php
          $id = $_GET['id'];
-
          if (isset($_GET['id'])) {
            $id = htmlentities($_GET['id']);
          }
-         if (empty($_POST['edit'])) {
-           $drop = $pdo->query("delete from tasks where id = $id");
-         }
-
          if (isset($_POST['edit'])) {
            $descr = htmlentities($_POST['edit']);
          }
-
          if (!empty($descr)) {
-           $edit = $pdo->quary("update tasks set description = $descr where id = $id");
+           $edit = $pdo->query("update tasks set description = $descr where id = $id");
          }
 
+         $done = $_GET['is_done'];
+         if (empty($_GET['is_done'])) {
+           $isdone = $pdo->query("update tasks set is_done = 1 where id = $id");
+         }
+
+         if (empty($_POST['drop'])) {
+           $drop = $pdo->query("delete from tasks where id = $id");
+         }
  }
 var_dump($_GET);
 var_dump($_POST);
@@ -104,4 +108,4 @@ var_dump($_POST);
        </tbody>
      </table>
    </body>
- </html>
+</html>
