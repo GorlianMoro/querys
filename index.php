@@ -8,13 +8,8 @@ if (!empty($desc)) {
     $sql = $pdo->exec("insert into tasks (description, date_added) values ('$desc', NOW())");
 }
 
-$id = $pdo->query("select id from tasks")->fetchAll(PDO::FETCH_COLUMN);
-if (isset($_GET['id'])) {
-  $id = htmlentities($_GET['id']);
-}
-
-if (!empty($desc)) {
-  $update = $pdo->exec("update tasks set description = $desc where id = $id");
+if (isset($_GET['description'])) {
+    $desc = htmlentities($_GET['description']);
 }
 
 $fulldesc = $pdo->query("select * from tasks");
@@ -73,13 +68,23 @@ $fulldesc = $pdo->query("select * from tasks");
              <td><?php echo $row['description'] . "<br />"; ?></td>
              <td><?php echo $row['is_done'] . "<br />"; ?></td>
              <td><?php echo $row['date_added'] . "<br />"; ?></td>
-             <td> <a href="index.php?id=<?echo $_GET['id']?>&action=edit<?php $update; ?>">Изменить</a>
+             <td> <a href="index.php?id=<?echo $row['id']?>&action=edit">Изменить</a>
                   <a href="index.php">Выполнить</a>
-                  <a href="index.php?id=<?php echo $_GET['id']?>&action=">Удалить</a>
+                  <a href="index.php?id=<?echo $row['id'];
+                  $drop = $pdo->exec("delete from tasks where id = $id"); ?>&action=delete">Удалить</a>
             </td>
          </tr>
          <?php
- } ?>
+ }
+ if (isset($_GET['id'])) {
+   $id = htmlentities($_GET['id']);
+ }
+var_dump($_GET);
+ if (!empty($_GET)) {
+   $id = $_GET['id'];
+   $update = $pdo->exec("update tasks set description = $desc where id = $id");
+ }
+ ?>
        </tbody>
      </table>
    </body>
